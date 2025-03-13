@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Estimate Your Bill{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-bold">Bill Estimation</h2>
+<form hx-post="/estimate" hx-target="#result" class="mt-4 bg-white p-4 rounded shadow">
+    <label class="block">Appliance Name</label>
+    <input type="text" name="appliance" class="w-full border p-2 rounded">
+
+    <label class="block mt-2">Power Rating (W)</label>
+    <input type="number" name="power_rating" class="w-full border p-2 rounded">
+
+    <label class="block mt-2">Usage Duration (Hours)</label>
+    <input type="number" name="duration" class="w-full border p-2 rounded">
+
+    <label class="block mt-2">Time of Use</label>
+    <select name="time_of_use" class="w-full border p-2 rounded">
+        <option value="morning">Morning</option>
+        <option value="afternoon">Afternoon</option>
+        <option value="evening">Evening</option>
+        <option value="night">Night</option>
+    </select>
+
+    <button type="submit" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded">Estimate</button>
+</form>
+
+<div id="result" class="mt-4 text-xl font-bold"></div>
+{% endblock %}
