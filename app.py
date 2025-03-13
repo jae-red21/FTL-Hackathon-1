@@ -14,5 +14,13 @@ def dashboard():
 def estimate():
     return render_template("estimate.html")
 
+@app.route('/tips')
+def tips():
+    return render_template("tips.html")
+
+@app.route('/pricing')
+def pricing():
+    return render_template("pricing.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
