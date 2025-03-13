@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Energy-Saving Tips{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-bold">Best Energy-Saving Practices</h2>
+<ul class="mt-4 space-y-2">
+    {% for tip in energy_tips %}
+    <li class="bg-gray-200 p-3 rounded">{{ tip }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
