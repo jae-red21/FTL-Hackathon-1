@@ -4,7 +4,7 @@ from flask_restful import Api
 import os
 from models.user_models import init_db
 from extensions import db
-
+from routes.user_routes import UserResource
 
 app = Flask(__name__)
 
@@ -30,15 +30,20 @@ api.add_resource(UserResource, "/user")
 
 @app.route("/")
 def index():
-    return render_template("base.html")
+    user = get_logged_in_user()
+    return render_template("base.html", user=user)
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template("dashboard.html")
+    user = get_logged_in_user()
+    return render_template("dashboard.html", user=user)
+
 
 @app.route("/estimate")
 def estimate():
-    return render_template("estimate.html")
+    user = get_logged_in_user()
+    return render_template("estimate.html", user=user)
+
 
 @app.route("/add-row", methods=["POST"])
 def add_row():
@@ -68,16 +73,24 @@ def calculate_bill():
 
 @app.route("/tips")
 def tips():
-    return render_template("tips.html")
+    user = get_logged_in_user()
+    return render_template("tips.html", user=user)
 
 @app.route("/pricing")
 def pricing():
-    return render_template("pricing.html")
+    user = get_logged_in_user()
+    return render_template("pricing.html", user=user)
 
 def calculate_cost(total_energy):
     # Define your cost calculation logic here
     cost_per_kwh = 0.5  # Example cost per kWh
     return total_energy * cost_per_kwh
+
+def get_logged_in_user():
+     if 'user_id' in session:
+        user = User.query.filter_by(id=session['user_id']).first()
+        return user
+     return None
 
 if __name__ == "__main__":
     app.run(debug=True)
