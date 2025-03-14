@@ -40,6 +40,11 @@ def add_row():
     """HTMX - Add new row dynamically to bill estimation table."""
     return render_template("row.html")
 
+@app.route("/remove-row", methods=["DELETE"])
+def remove_row():
+    """HTMX - Remove row dynamically."""
+    return ""
+
 @app.route("/calculate-bill", methods=["POST"])
 def calculate_bill():
     """Calculate estimated electricity bill based on appliance usage."""
