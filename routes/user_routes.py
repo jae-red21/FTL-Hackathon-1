@@ -18,6 +18,13 @@ class UserResource(Resource):
    
    
     def post(self):
+
+        if not request.is_json:
+            return {"message": "Request must be JSON"}, 400  # Ensure JSON format
+
+        data = request.get_json(silent=True)  # Avoid crashing if JSON is invalid
+        if not data:
+            return {"message": "Invalid JSON data"}, 400
         """Register a new user and predict electricity cost"""
         data = request.get_json()
 
@@ -29,7 +36,7 @@ class UserResource(Resource):
             return {"message": "Missing data"}, 400
         try:
             # Prepare input data for the AI model (assuming it expects daily and monthly consumption)
-            input_data = np.array([[daily_kwh, monthly_kwh]])
+            input_data = np.array([[daily_kwh, monthly_kwh] + ([0.0] * 14)])  # Adjust based on your model
 
             # Predict electricity cost using the trained model
             predicted_cost = model.predict(input_data)[0]
@@ -49,7 +56,7 @@ class UserResource(Resource):
             return {"message": f"Error during prediction or saving user: {str(e)}"}, 500
         
 
-        
+
         # Prepare input for the AI model
         input_data = np.array([[daily_kwh, monthly_kwh]])  # Adjust based on your model
         predicted_cost = model.predict(input_data)[0]
