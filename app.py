@@ -1,20 +1,6 @@
 from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
-from flask_restful import Api
-import os
-
 
 app = Flask(__name__)
-
-# Configure SQLite database
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(BASE_DIR, "database/electricity.db")
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-# Initialize API and Database
-db = SQLAlchemy(app)
-api = Api(app)
-
 
 @app.route("/")
 def index():
@@ -28,11 +14,37 @@ def dashboard():
 def estimate():
     return render_template("estimate.html")
 
-@app.route('/tips')
+@app.route("/add-row", methods=["POST"])
+def add_row():
+    """HTMX - Add new row dynamically to bill estimation table."""
+    return render_template("row.html")
+
+@app.route("/remove-row", methods=["DELETE"])
+def remove_row():
+    """HTMX - Remove row dynamically."""
+    return ""
+
+@app.route("/calculate-bill", methods=["POST"])
+def calculate_bill():
+    """Calculate estimated electricity bill based on appliance usage."""
+    try:
+        power_ratings = list(map(float, request.form.getlist("power_rating[]")))
+        usage_hours = list(map(float, request.form.getlist("usage_hours[]")))
+        quantities = list(map(int, request.form.getlist("quantity[]")))
+
+        total_energy = sum((p * h * q) / 1000 for p, h, q in zip(power_ratings, usage_hours, quantities))
+        estimated_cost = calculate_cost(total_energy)
+
+        return f"Estimated Cost: {estimated_cost} ETB"
+    
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+@app.route("/tips")
 def tips():
     return render_template("tips.html")
 
-@app.route('/pricing')
+@app.route("/pricing")
 def pricing():
     return render_template("pricing.html")
 
