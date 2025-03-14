@@ -1,7 +1,10 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 import os
+from models.user_models import init_db
+
+
 
 app = Flask(__name__)
 
@@ -9,12 +12,12 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(BASE_DIR, "database/electricity.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-
+init_db(app)
 db = SQLAlchemy(app)
 api = Api(app)
 
+
 # Import models and routes
-from models.user_model import User
 from routes.user_routes import UserResource
 
 # Create database tables
@@ -70,6 +73,11 @@ def tips():
 @app.route("/pricing")
 def pricing():
     return render_template("pricing.html")
+
+def calculate_cost(total_energy):
+    # Define your cost calculation logic here
+    cost_per_kwh = 0.5  # Example cost per kWh
+    return total_energy * cost_per_kwh
 
 if __name__ == "__main__":
     app.run(debug=True)
