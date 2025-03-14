@@ -1,27 +1,32 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from flask_restful import Api
+import os
+from models.user_models import init_db
+from extensions import db
+
 
 app = Flask(__name__)
 
-# Ethiopian Electrical Utility Pricing (ETB per kWh)
-EEU_TARIFFS = [
-    (50, 0.273), (100, 0.563), (200, 0.858), (500, 1.081), (float("inf"), 1.256)
-]
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(BASE_DIR, "database/electricity.db")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-def calculate_cost(energy_kwh):
-    """Calculate electricity cost based on EEU tariff system."""
-    cost = 0
-    remaining_kwh = energy_kwh
+db.init_app(app)
+#db = SQLAlchemy(app)
+api = Api(app)
 
-    for limit, rate in EEU_TARIFFS:
-        if remaining_kwh <= 0:
-            break
-        used_kwh = min(remaining_kwh, limit)
-        cost += used_kwh * rate
-        remaining_kwh -= used_kwh
 
-    return round(cost, 2)
+# Import models and routes
+from routes.user_routes import UserResource
 
-# ---------------- ROUTES ----------------
+# Create database tables
+with app.app_context():
+    db.create_all()
+
+# Register API endpoints
+api.add_resource(UserResource, "/user")
+
 
 @app.route("/")
 def index():
@@ -68,6 +73,11 @@ def tips():
 @app.route("/pricing")
 def pricing():
     return render_template("pricing.html")
+
+def calculate_cost(total_energy):
+    # Define your cost calculation logic here
+    cost_per_kwh = 0.5  # Example cost per kWh
+    return total_energy * cost_per_kwh
 
 if __name__ == "__main__":
     app.run(debug=True)
