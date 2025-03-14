@@ -33,6 +33,11 @@ def estimate():
 def add_row():
     return render_template("row.html")
 
+@app.route("/remove-row", methods=["DELETE"])
+def remove_row():
+    """HTMX - Remove row dynamically."""
+    return ""
+
 @app.route("/calculate-bill", methods=["POST"])
 def calculate_bill():
     try:
