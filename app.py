@@ -1,6 +1,29 @@
 from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+from flask_restful import Api
+import os
 
 app = Flask(__name__)
+
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(BASE_DIR, "database/electricity.db")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+
+db = SQLAlchemy(app)
+api = Api(app)
+
+# Import models and routes
+from models.user_model import User
+from routes.user_routes import UserResource
+
+# Create database tables
+with app.app_context():
+    db.create_all()
+
+# Register API endpoints
+api.add_resource(UserResource, "/user")
+
 
 @app.route("/")
 def index():
