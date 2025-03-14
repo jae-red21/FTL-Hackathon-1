@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 import os
 from models.user_models import init_db
-
+from extensions import db
 
 
 app = Flask(__name__)
@@ -12,8 +12,8 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(BASE_DIR, "database/electricity.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-init_db(app)
-db = SQLAlchemy(app)
+db.init_app(app)
+#db = SQLAlchemy(app)
 api = Api(app)
 
 
