@@ -13,12 +13,25 @@
         </tr>
     </thead>
     <tbody>
-        {% for price in pricing_data %}
-        <tr class="border">
-            <td class="p-2">{{ price.range }}</td>
-            <td class="p-2">{{ price.rate }}</td>
+        {% if pricing_data %}
+            {% for price in pricing_data %}
+            <tr class="border">
+                <td class="p-2">{{ price.range }}</td>
+                <td class="p-2">{{ price.rate }}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="2" class="p-2 text-center text-red-600">Pricing data not available at the moment.</td>
         </tr>
-        {% endfor %}
+        {% endif %}
     </tbody>
 </table>
+<!-- Optional Update or Refresh Button -->
+<div class="mt-4">
+    <button hx-get="/refresh-pricing" hx-target="#pricing-table" class="bg-green-600 text-white px-6 py-2 rounded">
+        Refresh Pricing Data
+    </button>
+</div>
+</div>
 {% endblock %}

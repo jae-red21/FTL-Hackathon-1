@@ -25,4 +25,13 @@
         </tbody>
     </table>
 </div>
+{% if user %}
+<div class="mt-6">
+    <h3 class="text-xl font-semibold">User Details</h3>
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Daily Consumption:</strong> {{ user.daily_consumption_kwh }} kWh</p>
+    <p><strong>Monthly Consumption:</strong> {{ user.monthly_consumption_kwh }} kWh</p>
+    <p><strong>Predicted Cost:</strong> ${{ user.predicted_cost }}</p>
+</div>
+{% endif %}
 {% endblock %}
