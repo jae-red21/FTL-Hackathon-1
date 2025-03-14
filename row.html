@@ -1,0 +1,9 @@
+<tr class="border">
+    <td class="p-2 border"><input type="text" name="appliance[]" class="w-full p-1 border rounded" required></td>
+    <td class="p-2 border"><input type="number" name="power_rating[]" class="w-full p-1 border rounded" required></td>
+    <td class="p-2 border"><input type="number" name="usage_hours[]" class="w-full p-1 border rounded" required></td>
+    <td class="p-2 border"><input type="number" name="quantity[]" class="w-full p-1 border rounded" value="1" required></td>
+    <td class="p-2 border">
+        <button hx-delete="/remove-row" hx-target="closest tr" hx-swap="outerHTML" class="text-red-600 font-bold">－</button>
+    </td>
+</tr>
